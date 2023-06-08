@@ -8,17 +8,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 String apiURI = EnvKeys.serverURI;
 
 abstract class ProfileDatasource {
-  Future<ProfileModel> getOwnProfile();
+  Future<ProfileModel> getProfile(int userid);
 }
 
 class ProfileDatasourceImp implements ProfileDatasource {
   @override
-  Future<ProfileModel> getOwnProfile() async {
+  Future<ProfileModel> getProfile(int userid) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final int? profileid = prefs.getInt('id');
     final String? access = prefs.getString('access');
 
-    var url = Uri.https(apiURI, 'userprofile/user/$profileid');
+    var url = Uri.https(apiURI, 'userprofile/user/$userid');
     var headers = {'Authorization': 'Bearer $access'};
 
     var response = await http.get(url, headers: headers);

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final int userid;
+  const ProfileScreen(this.userid, {super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -15,7 +16,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     super.initState();
-    context.read<ProfileBloc>().add(GetOwnProfile());
+    context.read<ProfileBloc>().add(GetProfile(userid: widget.userid));
     _tabController = TabController(length: 2, vsync: this);
   }
 

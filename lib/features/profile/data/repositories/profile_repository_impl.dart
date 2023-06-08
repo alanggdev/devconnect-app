@@ -8,7 +8,7 @@ class ProfileRepositoryImpl implements ProfileRepository{
   ProfileRepositoryImpl({required this.profileDatasource});
 
   @override
-  Future<ProfileModel> getOwnProfile() async {
-    return await profileDatasource.getOwnProfile();
+  Future<ProfileModel> getProfile(int userid) async {
+    return await profileDatasource.getProfile(userid);
   }
 }

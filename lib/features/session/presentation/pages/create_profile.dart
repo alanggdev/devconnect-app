@@ -20,7 +20,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   final lastNameController = TextEditingController();
   final statusController = TextEditingController();
   final descriptionController = TextEditingController();
-  bool isUploaded = false;
   File? file;
 
   Future<void> getImage() async {
@@ -28,9 +27,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       file = File(image.path);
-      setState(() {
-        isUploaded = true;
-      });
     }
   }
 

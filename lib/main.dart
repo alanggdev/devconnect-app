@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
                 signUpUseCase: usecaseConfig.signUpUseCase!)),
         BlocProvider<ProfileBloc>(
             create: (BuildContext context) => ProfileBloc(
-                getOwnProfileUseCase: usecaseConfig.getOwnProfileUseCase!)),
+                getProfileUseCase: usecaseConfig.getProfileUseCase!)),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

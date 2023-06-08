@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dev_connect_app/features/session/presentation/widgets/text_field.dart';
 import 'package:dev_connect_app/features/session/presentation/bloc/session_bloc.dart';
 import 'package:dev_connect_app/features/profile/presentation/pages/profile_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -196,12 +197,17 @@ class _SignInScreenState extends State<SignInScreen> {
               else if (state is SignedIn)
                 if (state.signInStatus == "Success")
                   FutureBuilder(
-                    future: Future.delayed(Duration.zero, () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProfileScreen(),
-                        ),
+                    future: Future.delayed(Duration.zero, () async {
+                      await SharedPreferences.getInstance().then(
+                        (prefs) {
+                          final int? userid = prefs.getInt('id');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreen(userid!),
+                            ),
+                          );
+                        },
                       );
                     }),
                     builder: (context, snapshot) {

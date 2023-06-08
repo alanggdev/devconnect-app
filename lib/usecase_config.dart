@@ -1,6 +1,6 @@
 import 'package:dev_connect_app/features/profile/data/datasources/profile_remote.dart';
 import 'package:dev_connect_app/features/profile/data/repositories/profile_repository_impl.dart';
-import 'package:dev_connect_app/features/profile/domain/usecases/get_own_profile.dart';
+import 'package:dev_connect_app/features/profile/domain/usecases/get_profile.dart';
 import 'package:dev_connect_app/features/session/data/datasources/session_remote.dart';
 import 'package:dev_connect_app/features/session/data/repositories/session_repository_impl.dart';
 import 'package:dev_connect_app/features/session/domain/usecases/sign_in.dart';
@@ -17,7 +17,7 @@ class UseCaseConfig {
 
   ProfileDatasourceImp? profileDatasourceImp;
   ProfileRepositoryImpl? profileRepositoryImpl;
-  GetOwnProfileUseCase? getOwnProfileUseCase;
+  GetProfileUseCase? getProfileUseCase;
 
   UseCaseConfig() {
     signInDatasourceImpl = SignInDatasourceImpl();
@@ -30,6 +30,6 @@ class UseCaseConfig {
 
     profileDatasourceImp = ProfileDatasourceImp();
     profileRepositoryImpl = ProfileRepositoryImpl(profileDatasource: profileDatasourceImp!);
-    getOwnProfileUseCase = GetOwnProfileUseCase(profileRepositoryImpl!);
+    getProfileUseCase = GetProfileUseCase(profileRepositoryImpl!);
   }
 }
