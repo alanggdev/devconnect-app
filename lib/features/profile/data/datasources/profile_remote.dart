@@ -25,7 +25,6 @@ class ProfileDatasourceImp implements ProfileDatasource {
 
     if (response.statusCode == 200) {
       var reponseData = convert.jsonDecode(response.body);
-      print(reponseData.toString());
       return ProfileModel.fromJson(reponseData['pay_load'][0]);
     } else {
       throw Exception();
