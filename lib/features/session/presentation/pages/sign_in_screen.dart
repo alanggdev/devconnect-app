@@ -42,7 +42,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                   width: 75,
                                 ),
                                 const Padding(
-                                  padding: EdgeInsets.only(left: 20),
+                                  padding: EdgeInsets.only(left: 10),
                                   child: Text(
                                     'Dev Connect',
                                     style: TextStyle(
@@ -194,19 +194,35 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 )
               else if (state is SignedIn)
-                FutureBuilder(
-                  future: Future.delayed(Duration.zero, () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfileScreen(),
-                      ),
-                    );
-                  }),
-                  builder: (context, snapshot) {
-                    return Container();
-                  },
-                ),
+                if (state.signInStatus == "Success")
+                  FutureBuilder(
+                    future: Future.delayed(Duration.zero, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfileScreen(),
+                        ),
+                      );
+                    }),
+                    builder: (context, snapshot) {
+                      return Container();
+                    },
+                  )
+                else if (state.signInStatus == "Bad Credentials")
+                  Builder(
+                    builder: (context) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Credenciales incorrectas'),
+                            duration: Duration(seconds: 3),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      });
+                      return Container();
+                    },
+                  )
             ],
           );
         },

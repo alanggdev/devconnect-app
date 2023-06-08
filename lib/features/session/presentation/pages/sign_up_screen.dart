@@ -40,7 +40,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           width: 75,
                         ),
                         const Padding(
-                          padding: EdgeInsets.only(left: 20),
+                          padding: EdgeInsets.only(left: 10),
                           child: Text(
                             'Dev Connect',
                             style: TextStyle(

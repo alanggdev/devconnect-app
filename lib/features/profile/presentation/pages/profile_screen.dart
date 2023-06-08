@@ -43,8 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const Text('Profile ID'),
                 Text(state.profile.id.toString()),
                 const Text('Profile Avatar'),
-                Image.network(
-                    'https://${EnvKeys.serverURI}${state.profile.avatarURL}'),
+                Image.network(state.profile.avatarURL),
                 const Text('Profile Description'),
                 Text(state.profile.description),
                 const Text('Profile Status'),

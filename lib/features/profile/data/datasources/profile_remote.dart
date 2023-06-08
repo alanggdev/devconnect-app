@@ -18,14 +18,15 @@ class ProfileDatasourceImp implements ProfileDatasource {
     final int? profileid = prefs.getInt('id');
     final String? access = prefs.getString('access');
 
-    var url = Uri.https(apiURI, 'userprofile/detail/$profileid');
+    var url = Uri.https(apiURI, 'userprofile/user/$profileid');
     var headers = {'Authorization': 'Bearer $access'};
 
     var response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
       var reponseData = convert.jsonDecode(response.body);
-      return ProfileModel.fromJson(reponseData['pay_load']);
+      print(reponseData.toString());
+      return ProfileModel.fromJson(reponseData['pay_load'][0]);
     } else {
       throw Exception();
     }

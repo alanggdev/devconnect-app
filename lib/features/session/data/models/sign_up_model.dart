@@ -34,8 +34,9 @@ class SignUpModel extends SignUp {
     };
   }
 
-  static Map<String, dynamic> fromEntityToJsonProfile(SignUp signup) {
+  static Map<String, dynamic> fromEntityToJsonProfile(SignUp signup, int userprofile) {
     return {
+      'user_profile':  userprofile,
       'user_avatar': signup.avatar,
       'user_description': signup.description,
       'user_status': signup.status

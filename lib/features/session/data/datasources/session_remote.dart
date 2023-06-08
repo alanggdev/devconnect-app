@@ -38,6 +38,14 @@ class SignInDatasourceImpl implements SignInDatasource {
       await prefs.setString('access', responseDataUser.access);
       await prefs.setString('refresh', responseDataUser.refresh);
       return "Success";
+    } else if (response.statusCode == 400) {
+      var reponseData = convert.jsonDecode(response.body);
+      if (reponseData['non_field_errors'][0] ==
+          "Unable to log in with provided credentials.") {
+        return "Bad Credentials";
+      } else {
+        throw Exception();
+      }
     } else {
       throw Exception();
     }
@@ -53,36 +61,38 @@ class SignUpDatasourceImpl implements SignUpDatasource {
     dynamic bodyUser = SignUpModel.fromEntityToJsonUser(singUpData);
     var responseUser = await http.post(urlUser,
         body: convert.jsonEncode(bodyUser), headers: headers);
+    if (responseUser.statusCode == 201) {
+      var responseUserData = convert.jsonDecode(responseUser.body);
+      final userProfileData = {
+        'user_profile': responseUserData['user']['pk'],
+        'user_description': singUpData.description,
+        'user_status': singUpData.status
+      };
 
-    if (responseUser.statusCode == 200) {
-      
-      return "Success";
-      // var urlUProfile = Uri.https(apiURI, '/userprofile/create/');
-      // dynamic bodyProfile = SignUpModel.fromEntityToJsonProfile(singUpData);
+      var request = http.MultipartRequest(
+          'POST', Uri.parse('https://$apiURI/userprofile/create/'));
+      request = jsonToFormData(request, userProfileData);
+      request.headers['X-Requested-With'] = "XMLHttpRequest";
+      request.headers['Authorization'] = "Bearer ${responseUserData['access']}";
 
-      // var responseProfile = await http.post(urlUProfile,
-      //     body: convert.jsonEncode(bodyProfile), headers: headers);
+      request.files.add(await http.MultipartFile.fromPath(
+          'user_avatar', singUpData.avatar.path));
 
-      // if (responseProfile.statusCode == 200) {
-      //   return "Success";
-      // } else {
-      //   throw Exception();
-      // }
+      final responseProfile = await request.send();
+      if (responseProfile.statusCode == 200) {
+        return "Success";
+      } else {
+        throw Exception();
+      }
     } else {
       throw Exception();
     }
+  }
 
-    // if (response.statusCode == 200) {
-    //   var reponseData = convert.jsonDecode(response.body);
-    //   UserModel responseDataUser = UserModel.fromJson(reponseData);
-
-    //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-    //   await prefs.setInt('id', reponseData['user']['pk']);
-    //   await prefs.setString('access', responseDataUser.access);
-    //   await prefs.setString('refresh', responseDataUser.refresh);
-    //   return "Success";
-    // } else {
-    //   throw Exception();
-    // }
+  jsonToFormData(http.MultipartRequest request, Map<String, dynamic> data) {
+    for (var key in data.keys) {
+      request.fields[key] = data[key].toString();
+    }
+    return request;
   }
 }
