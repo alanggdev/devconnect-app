@@ -27,6 +27,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       file = File(image.path);
+      setState(() {
+        
+      });
     }
   }
 
