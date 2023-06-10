@@ -48,10 +48,7 @@ class PostModel extends Post {
   }
 
   static Map<String, dynamic> fromEntityToJsonLikes(PostModel profile) {
-    return {
-      'author': profile.author,
-      'likes': profile.likes
-    };
+    return {'author': profile.author, 'likes': profile.likes};
   }
 
   static Map<String, dynamic> fromEntityToJsonCreate(PostModel profile) {
@@ -69,5 +66,10 @@ class PostModel extends Post {
       'date': profile.date,
       'media': profile.mediaFile
     };
+  }
+
+  @override
+  String toString() {
+    return 'PostModel(author: $author, id: $id, userAuthor: $userAuthor, mediaURL: $mediaURL, likes: $likes, description: $description, date: $date, mediaFile: $mediaFile)';
   }
 }

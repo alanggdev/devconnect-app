@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> getIDUserVisit() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     useridvisit = prefs.getInt('id')!;
+    
     setState(() {
       screens = [
         const PublicPostsScreen(),

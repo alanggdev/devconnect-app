@@ -35,6 +35,7 @@ class SignInDatasourceImpl implements SignInDatasource {
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setInt('id', reponseData['user']['pk']);
+      await prefs.setString('username', reponseData['user']['first_name']);
       await prefs.setString('access', responseDataUser.access);
       await prefs.setString('refresh', responseDataUser.refresh);
       return "Success";

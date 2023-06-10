@@ -12,6 +12,14 @@ class UpdatedPostByLike extends PostState {
   UpdatedPostByLike({required this.status});
 }
 
+class LoadingPublicPosts extends PostState {}
+
+class LoadedPublicPosts extends PostState {
+  List<Post> publicPosts;
+
+  LoadedPublicPosts({required this.publicPosts});
+}
+
 class Error extends PostState {
   final String error;
 

@@ -5,6 +5,7 @@ import 'package:dev_connect_app/features/profile/data/models/profile_post_model.
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 String apiURI = EnvKeys.serverURI;
 
@@ -50,13 +51,25 @@ class ProfileDatasourceImp implements ProfileDatasource {
       if (payLoad.length > 0) {
         for (var object in payLoad) {
           if (object['media'] == null) {
-            ProfilePostModel profilePostModelTemp = ProfilePostModel.fromJson(object);
+            ProfilePostModel profilePostModelTemp =
+                ProfilePostModel.fromJson(object);
             profilePostList.add(profilePostModelTemp);
           } else {
-            ProfilePostModel profilePostModelTemp = ProfilePostModel.fromJsonMedia(object);
+            ProfilePostModel profilePostModelTemp =
+                ProfilePostModel.fromJsonMedia(object);
             profilePostList.add(profilePostModelTemp);
           }
         }
+
+        profilePostList.sort((a, b) {
+          // Parse the date strings into DateTime objects
+          DateTime dateA = DateFormat('dd/MM/yyyy hh:mma').parse(a.date);
+          DateTime dateB = DateFormat('dd/MM/yyyy hh:mma').parse(b.date);
+
+          // Compare the dates
+          return dateB.compareTo(dateA);
+        });
+
         return profilePostList;
       } else {
         return profilePostList;

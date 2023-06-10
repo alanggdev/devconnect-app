@@ -8,3 +8,5 @@ class LikePost extends PostEvent{
 
   LikePost({required this.postid, required this.userid});
 }
+
+class GetPublicPosts extends PostEvent {}

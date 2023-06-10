@@ -17,6 +17,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
   int? useridvisit;
+  bool? showBack;
   @override
   void initState() {
     super.initState();
@@ -28,6 +29,13 @@ class _ProfileScreenState extends State<ProfileScreen>
   Future<void> getIDUserVisit() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     useridvisit = prefs.getInt('id');
+    setState(() {
+      if (useridvisit == widget.userid) {
+        showBack = false;
+      } else {
+        showBack = true;
+      }
+    });
   }
 
   @override
@@ -47,22 +55,27 @@ class _ProfileScreenState extends State<ProfileScreen>
           backgroundColor: const Color(0xffF4F4F4),
           title: GestureDetector(
             onTap: () {
-              // print('Salir');
-              // Navigator.pop(context);
+              Navigator.pop(context);
             },
             child: Row(
-              children: const [
-                Icon(
-                  Icons.navigate_before,
-                  color: Colors.black,
-                ),
-                Text(
-                  'Regresar',
-                  style: TextStyle(
+              children: [
+                if (showBack == false)
+                  const Text('Tu perfil', style: TextStyle(color: Colors.black),)
+                else
+                  const Icon(
+                    Icons.navigate_before,
                     color: Colors.black,
-                    fontSize: 18,
                   ),
-                ),
+                if (showBack == false)
+                  Container()
+                else
+                  const Text(
+                    'Regresar',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
               ],
             ),
           ),
@@ -244,19 +257,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ];
                 },
                 body: TabBarView(controller: _tabController, children: [
-                  ListView.builder(
-                    itemCount: state.profilePosts.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final isLikedNotifier = ValueNotifier<bool>(state
-                          .profilePosts[index].postLikes
-                          .contains(useridvisit));
-                      return PostProfileScreen(
-                          state.profilePosts[index], isLikedNotifier);
-                      // return postLabel(
-                      //     state.profilePosts[index], isLikedNotifier);
-                    },
-                  ),
-                  const Text('data')
+                  if (state.profilePosts.isEmpty)
+                    const Center(child: Text('Sin publicaciones'))
+                  else
+                    ListView.builder(
+                      itemCount: state.profilePosts.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final isLikedNotifier = ValueNotifier<bool>(state
+                            .profilePosts[index].postLikes
+                            .contains(useridvisit));
+                        return PostProfileScreen(
+                            state.profilePosts[index], isLikedNotifier);
+                      },
+                    ),
+                  const Center(child: Text('Sin comentarios'))
                 ]));
           } else if (state is Error) {
             return Center(
