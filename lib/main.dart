@@ -1,3 +1,4 @@
+import 'package:dev_connect_app/features/post/presentation/bloc/post_bloc.dart';
 import 'package:dev_connect_app/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:dev_connect_app/features/session/presentation/bloc/session_bloc.dart';
 import 'package:dev_connect_app/usecase_config.dart';
@@ -27,9 +28,11 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) => ProfileBloc(
                 getProfileUseCase: usecaseConfig.getProfileUseCase!,
                 getProfilePostsUseCase: usecaseConfig.getProfilePostsUseCase!)),
+        BlocProvider<PostBloc>(
+            create: (BuildContext context) => PostBloc(
+                updatePostUseCase: usecaseConfig.updatePostUseCase!)),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

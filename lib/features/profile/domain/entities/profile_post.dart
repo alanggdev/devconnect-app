@@ -4,12 +4,14 @@ class ProfilePost {
   final List<dynamic> postLikes;
   final String description;
   final String date;
+  final String? postMediaRUL;
 
   ProfilePost({
     required this.id,
     required this.userAuthor,
     required this.postLikes,
     required this.description,
-    required this.date
+    required this.date,
+    this.postMediaRUL
   });
 }

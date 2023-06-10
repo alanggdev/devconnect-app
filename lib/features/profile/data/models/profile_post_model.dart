@@ -6,13 +6,15 @@ class ProfilePostModel extends ProfilePost {
       required dynamic userAuthor,
       required List<dynamic> postLikes,
       required String description,
-      required String date})
+      required String date,
+      String? postMediaRUL})
       : super(
             id: id,
             userAuthor: userAuthor,
             postLikes: postLikes,
             description: description,
-            date: date);
+            date: date,
+            postMediaRUL: postMediaRUL);
 
   factory ProfilePostModel.fromJson(Map<String, dynamic> json) {
     return ProfilePostModel(
@@ -23,18 +25,18 @@ class ProfilePostModel extends ProfilePost {
         date: json['date']);
   }
 
-  static Map<String, dynamic> fromEntityToJson(ProfilePostModel profile) {
-    return {
-      'id': profile.id,
-      'user_author': profile.userAuthor,
-      'likes': profile.postLikes,
-      'description': profile.description,
-      'date': profile.date
-    };
+  factory ProfilePostModel.fromJsonMedia(Map<String, dynamic> json) {
+    return ProfilePostModel(
+        id: json['id'],
+        userAuthor: json['user_author'],
+        postLikes: json['likes'],
+        description: json['description'],
+        date: json['date'],
+        postMediaRUL: json['media']);
   }
 
   @override
   String toString() {
-    return 'ProfilePostModel{id: $id, userAuthor: $userAuthor, postLikes: $postLikes, description: $description, date: $date}';
+    return 'ProfilePostModel{id: $id, userAuthor: $userAuthor, postLikes: $postLikes, description: $description, date: $date, media $postMediaRUL}';
   }
 }

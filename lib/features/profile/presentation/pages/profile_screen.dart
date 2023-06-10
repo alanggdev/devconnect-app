@@ -1,6 +1,6 @@
-import 'package:dev_connect_app/env_keys.dart';
-import 'package:dev_connect_app/features/profile/domain/entities/profile_post.dart';
+import 'package:dev_connect_app/features/post/presentation/pages/profile_posts_screen.dart';
 import 'package:dev_connect_app/features/profile/presentation/bloc/profile_bloc.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           backgroundColor: const Color(0xffF4F4F4),
           title: GestureDetector(
             onTap: () {
-              print('Salir');
+              // print('Salir');
               // Navigator.pop(context);
             },
             child: Row(
@@ -250,8 +250,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                       final isLikedNotifier = ValueNotifier<bool>(state
                           .profilePosts[index].postLikes
                           .contains(useridvisit));
-                      return postLabel(
+                      return PostProfileScreen(
                           state.profilePosts[index], isLikedNotifier);
+                      // return postLabel(
+                      //     state.profilePosts[index], isLikedNotifier);
                     },
                   ),
                   const Text('data')
@@ -265,284 +267,6 @@ class _ProfileScreenState extends State<ProfileScreen>
             return Container();
           }
         }),
-      ),
-    );
-  }
-
-  Padding postLabel(ProfilePost post, ValueNotifier<bool> isLikedNotifier) {
-    final likesCountNotifier = ValueNotifier<int>(post.postLikes.length);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      child: Container(
-        // color: Colors.white,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 3,
-              // offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 12, left: 12, right: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Center(
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 5,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                            image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: NetworkImage(
-                                  'https://${EnvKeys.serverURI}${post.userAuthor['user_profile']}'),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${post.userAuthor['first_name']} ${post.userAuthor['last_name']}',
-                              style: const TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              post.userAuthor['username'],
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Color(0xff6F707A),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    post.date,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Color(0xff6F707A),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 10),
-                child: Column(
-                  children: [
-                    Text(
-                      post.description,
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xff6F707A),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Color(0xff6EBCDF),
-                      width: 1,
-                    ),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                          children: [
-                            ValueListenableBuilder<bool>(
-                              valueListenable: isLikedNotifier,
-                              builder: (context, isLiked, child) {
-                                return Row(
-                                  children: [
-                                    TextButton.icon(
-                                      onPressed: () {
-                                        isLikedNotifier.value = !isLiked;
-                                        // print(isLikedNotifier.value);
-                                        // print('changed');
-                                        if (isLiked) {
-                                          likesCountNotifier.value -= 1;
-                                        } else {
-                                          likesCountNotifier.value += 1;
-                                        }
-                                      },
-                                      icon: Icon(
-                                        isLiked
-                                            ? Icons.thumb_up
-                                            : Icons.thumb_up_outlined,
-                                        color: isLiked
-                                            ? const Color(0xff242C71)
-                                            : const Color(0xff6EBCDF),
-                                        size: 18,
-                                      ),
-                                      label: Text(
-                                        'Me gusta',
-                                        style: TextStyle(
-                                            color: isLiked
-                                                ? const Color(0xff242C71)
-                                                : const Color(0xff6EBCDF),
-                                            fontSize: 12,
-                                            fontWeight: isLiked
-                                                ? FontWeight.bold
-                                                : FontWeight.normal),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 2),
-                                      child: Container(
-                                        width: 15,
-                                        height: 15,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black
-                                                  .withOpacity(0.35),
-                                              blurRadius: 5,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: ValueListenableBuilder<int>(
-                                          valueListenable: likesCountNotifier,
-                                          builder: (context, likesCount, child) {
-                                            return Center(
-                                          child: Text(
-                                            likesCount.toString(),
-                                            style: const TextStyle(
-                                              color: Color(0xff6EBCDF),
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                            // Row(
-                            //   children: [
-                            //     TextButton.icon(
-                            //       onPressed: () {
-                            //         print(isLiked);
-                            //         if (isLiked) {
-                            //           isLiked = false;
-                            //         } else {
-                            //           isLiked = true;
-                            //         }
-                            //         print(isLiked);
-                            //         print('changed');
-                            //       },
-                            //       icon: Icon(
-                            //         isLiked
-                            //             ? Icons.thumb_up
-                            //             : Icons.thumb_up_outlined,
-                            //         color: isLiked
-                            //             ? const Color(0xff242C71)
-                            //             : const Color(0xff6EBCDF),
-                            //         size: 18,
-                            //       ),
-                            //       label: Text(
-                            //         'Me gusta',
-                            //         style: TextStyle(
-                            //             color: isLiked
-                            //                 ? const Color(0xff242C71)
-                            //                 : const Color(0xff6EBCDF),
-                            //             fontSize: 12,
-                            //             fontWeight: isLiked
-                            //                 ? FontWeight.bold
-                            //                 : FontWeight.normal),
-                            //       ),
-                            //     ),
-                            //     Padding(
-                            //       padding: const EdgeInsets.only(left: 2),
-                            //       child: Container(
-                            //         width: 15,
-                            //         height: 15,
-                            //         decoration: BoxDecoration(
-                            //           shape: BoxShape.circle,
-                            //           color: Colors.white,
-                            //           boxShadow: [
-                            //             BoxShadow(
-                            //               color: Colors.black.withOpacity(0.35),
-                            //               blurRadius: 5,
-                            //               offset: const Offset(0, 2),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //         child: Center(
-                            //           child: Text(
-                            //             post.postLikes.length.toString(),
-                            //             style: const TextStyle(
-                            //               color: Color(0xff6EBCDF),
-                            //               fontSize: 12,
-                            //               fontWeight: FontWeight.bold,
-                            //             ),
-                            //           ),
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
-                          ],
-                        ),
-                        TextButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.chat_outlined,
-                              color: Color(0xff6EBCDF), size: 18),
-                          label: const Text(
-                            'Comentar',
-                            style: TextStyle(
-                                color: Color(0xff6EBCDF), fontSize: 12),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

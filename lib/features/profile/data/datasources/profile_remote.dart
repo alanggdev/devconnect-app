@@ -48,11 +48,14 @@ class ProfileDatasourceImp implements ProfileDatasource {
       var payLoad = responseDecoded['pay_load'];
 
       if (payLoad.length > 0) {
-        for (var object in payLoad){
-          // print(object['likes'].runtimeType);
-          ProfilePostModel profilePostModelTemp = ProfilePostModel.fromJson(object);
-          // print(profilePostModelTemp.toString());
-          profilePostList.add(profilePostModelTemp);
+        for (var object in payLoad) {
+          if (object['media'] == null) {
+            ProfilePostModel profilePostModelTemp = ProfilePostModel.fromJson(object);
+            profilePostList.add(profilePostModelTemp);
+          } else {
+            ProfilePostModel profilePostModelTemp = ProfilePostModel.fromJsonMedia(object);
+            profilePostList.add(profilePostModelTemp);
+          }
         }
         return profilePostList;
       } else {
