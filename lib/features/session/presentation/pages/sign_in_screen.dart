@@ -1,9 +1,10 @@
+import 'package:dev_connect_app/features/post/presentation/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:dev_connect_app/features/session/presentation/widgets/text_field.dart';
 import 'package:dev_connect_app/features/session/presentation/bloc/session_bloc.dart';
-import 'package:dev_connect_app/features/profile/presentation/pages/profile_screen.dart';
+// import 'package:dev_connect_app/features/profile/presentation/pages/profile_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -204,7 +205,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProfileScreen(userid!),
+                              builder: (context) => const HomeScreen(),
                             ),
                           );
                         },
