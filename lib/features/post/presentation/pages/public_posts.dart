@@ -61,7 +61,7 @@ class _PublicPostsScreenState extends State<PublicPostsScreen> {
                   Icons.autorenew,
                   size: 26,
                 ),
-                tooltip: 'Menú',
+                tooltip: 'Actualizar',
                 onPressed: () {
                   context.read<PostBloc>().add(GetPublicPosts());
                 },

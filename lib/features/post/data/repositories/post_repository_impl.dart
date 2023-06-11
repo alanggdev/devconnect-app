@@ -16,4 +16,9 @@ class PostRepositoryImpl implements PostRepository {
   Future<List<PostModel>> getAllPosts() async {
     return await postDatasource.getAllPosts();
   }
+
+  @override
+  Future<PostModel> getPostDetail(int postid) async {
+    return await postDatasource.getPostDetail(postid);
+  }
 }

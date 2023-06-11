@@ -10,7 +10,7 @@ String apiURI = EnvKeys.serverURI;
 
 abstract class PostDatasource {
   Future<String> updatePost(int postid, int userid);
-  Future<PostModel> getDetailPost(int postid);
+  Future<PostModel> getPostDetail(int postid);
   Future<List<PostModel>> getAllPosts();
 }
 
@@ -26,7 +26,7 @@ class PostDatasourceImpl implements PostDatasource {
       'Content-Type': 'application/json'
     };
 
-    getDetailPost(postid).then((postToupdate) {
+    getPostDetail(postid).then((postToupdate) {
       List<dynamic>? likes = postToupdate.likes;
       if (likes!.contains(userid)) {
         likes.remove(userid);
@@ -50,7 +50,7 @@ class PostDatasourceImpl implements PostDatasource {
   }
 
   @override
-  Future<PostModel> getDetailPost(int postid) async {
+  Future<PostModel> getPostDetail(int postid) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? access = prefs.getString('access');
 

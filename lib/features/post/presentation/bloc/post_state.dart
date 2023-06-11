@@ -20,6 +20,14 @@ class LoadedPublicPosts extends PostState {
   LoadedPublicPosts({required this.publicPosts});
 }
 
+class LoadingDetailPost extends PostState {}
+
+class LoadedDetailPost extends PostState {
+  final Post post;
+
+  LoadedDetailPost({required this.post});
+}
+
 class Error extends PostState {
   final String error;
 

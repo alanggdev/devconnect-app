@@ -10,3 +10,9 @@ class LikePost extends PostEvent{
 }
 
 class GetPublicPosts extends PostEvent {}
+
+class GetDetailPost extends PostEvent {
+  final int postid;
+
+  GetDetailPost({required this.postid});
+}

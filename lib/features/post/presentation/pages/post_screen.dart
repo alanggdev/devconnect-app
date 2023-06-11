@@ -1,6 +1,8 @@
 import 'package:dev_connect_app/env_keys.dart';
 import 'package:dev_connect_app/features/post/domain/entities/post.dart';
 import 'package:dev_connect_app/features/post/presentation/bloc/post_bloc.dart';
+import 'package:dev_connect_app/features/post/presentation/pages/detail_post_screen.dart';
+import 'package:dev_connect_app/features/profile/presentation/bloc/profile_bloc.dart' as profile_bloc;
 import 'package:dev_connect_app/features/profile/presentation/pages/profile_screen.dart';
 
 import 'package:flutter/material.dart';
@@ -93,6 +95,7 @@ class _PostScreenState extends State<PostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final commentController = TextEditingController();
     final likesCountNotifier =
         ValueNotifier<int>(widget.profilePost.likes!.length);
     return BlocBuilder<PostBloc, PostState>(
@@ -126,7 +129,8 @@ class _PostScreenState extends State<PostScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProfileScreen(widget.profilePost.author),
+                              builder: (context) =>
+                                  ProfileScreen(widget.profilePost.author),
                             ),
                           );
                         },
@@ -189,19 +193,30 @@ class _PostScreenState extends State<PostScreen> {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 10),
-                    child: Column(
-                      children: [
-                        Text(
-                          widget.profilePost.description!,
-                          textAlign: TextAlign.start,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xff6F707A),
-                          ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DetailPostScreen(widget.profilePost.id!),
                         ),
-                      ],
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Column(
+                        children: [
+                          Text(
+                            widget.profilePost.description!,
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Color(0xff6F707A),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   buildPostMediaWidget(widget.profilePost),
@@ -228,8 +243,13 @@ class _PostScreenState extends State<PostScreen> {
                                       children: [
                                         TextButton.icon(
                                           onPressed: () {
-                                            context.read<PostBloc>().add(LikePost(postid: widget.profilePost.id!, userid: useridvisit!));
-                                            widget.isLikedNotifier.value =!isLiked;
+                                            context.read<PostBloc>().add(
+                                                LikePost(
+                                                    postid:
+                                                        widget.profilePost.id!,
+                                                    userid: useridvisit!));
+                                            widget.isLikedNotifier.value =
+                                                !isLiked;
                                             if (isLiked) {
                                               likesCountNotifier.value -= 1;
                                             } else {
@@ -275,18 +295,16 @@ class _PostScreenState extends State<PostScreen> {
                                                 ),
                                               ],
                                             ),
-                                            child:
-                                                ValueListenableBuilder<int>(
+                                            child: ValueListenableBuilder<int>(
                                               valueListenable:
                                                   likesCountNotifier,
-                                              builder: (context, likesCount,
-                                                  child) {
+                                              builder:
+                                                  (context, likesCount, child) {
                                                 return Center(
                                                   child: Text(
                                                     likesCount.toString(),
                                                     style: const TextStyle(
-                                                      color:
-                                                          Color(0xff6EBCDF),
+                                                      color: Color(0xff6EBCDF),
                                                       fontSize: 12,
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -304,7 +322,21 @@ class _PostScreenState extends State<PostScreen> {
                               ],
                             ),
                             TextButton.icon(
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      contentPadding: const EdgeInsets.all(12),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      content: commentLabel(
+                                          context, commentController, widget.profilePost),
+                                    );
+                                  },
+                                );
+                              },
                               icon: const Icon(Icons.chat_outlined,
                                   color: Color(0xff6EBCDF), size: 18),
                               label: const Text(
@@ -324,6 +356,124 @@ class _PostScreenState extends State<PostScreen> {
           ),
         );
       },
+    );
+  }
+
+  SizedBox commentLabel(BuildContext context, TextEditingController commentController, Post profilePost) {
+    context.read<profile_bloc.ProfileBloc>().add(profile_bloc.GetProfile(userid: useridvisit!));
+    return SizedBox(
+      child: BlocBuilder<profile_bloc.ProfileBloc, profile_bloc.ProfileState>(builder: (context, stateProfile) {
+        if (stateProfile is profile_bloc.LoadingProfile) {
+          return const SizedBox(
+            height: 60,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (stateProfile is profile_bloc.LoadedProfile) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 165,
+            child: Column(
+              children: [
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Center(
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 5,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                  image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: NetworkImage(
+                                        stateProfile.profile.avatarURL),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${stateProfile.profile.user['first_name']} ${stateProfile.profile.user['last_name']}',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    stateProfile.profile.user['username'],
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Color(0xff6F707A),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 85,
+                          child: TextButton(
+                            onPressed: () {
+                              print(commentController.text);
+                            },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: const Color(0xff5D95D1),
+                              minimumSize: const Size(150, 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              shadowColor: Colors.black,
+                              elevation: 6,
+                            ),
+                            child: const Text('Comentar'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                      minLines: 1,
+                      maxLines: 6,
+                      controller: commentController,
+                      decoration: const InputDecoration(
+                          border: InputBorder.none, hintText: 'Comentar')),
+                ),
+              ],
+            ),
+          );
+        } else if (stateProfile is profile_bloc.Error) {
+          return Center(
+            child: Text(stateProfile.error,
+                style: const TextStyle(color: Colors.red)),
+          );
+        } else {
+          return Container();
+        }
+      }),
     );
   }
 }
