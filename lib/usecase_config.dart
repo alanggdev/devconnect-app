@@ -14,6 +14,7 @@ import 'package:dev_connect_app/features/post/domain/usecases/update_post.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_all_posts.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_detail_post.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_post_comments.dart';
+import 'package:dev_connect_app/features/post/domain/usecases/create_comment.dart';
 
 class UseCaseConfig {
   SignInDatasourceImpl? signInDatasourceImpl;
@@ -35,6 +36,7 @@ class UseCaseConfig {
   GetAllPostsUseCase? getAllPostsUseCase;
   GetDetailPostUseCase? getDetailPostUseCase;
   GetPostCommentsUseCase? getPostCommentsUseCase;
+  CreateCommentUseCase? createCommentUseCase;
 
   UseCaseConfig() {
     signInDatasourceImpl = SignInDatasourceImpl();
@@ -56,5 +58,6 @@ class UseCaseConfig {
     getAllPostsUseCase = GetAllPostsUseCase(postRepositoryImpl!);
     getDetailPostUseCase = GetDetailPostUseCase(postRepositoryImpl!);
     getPostCommentsUseCase = GetPostCommentsUseCase(postRepositoryImpl!);
+    createCommentUseCase = CreateCommentUseCase(postRepositoryImpl!);
   }
 }

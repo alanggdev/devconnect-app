@@ -16,3 +16,12 @@ class GetDetailPost extends PostEvent {
 
   GetDetailPost({required this.postid});
 }
+
+class CreateComment extends PostEvent {
+  final int postid;
+  final int userid;
+  final String description;
+  final String date;
+
+  CreateComment({required this.postid, required this.userid, required this.description, required this.date});
+}

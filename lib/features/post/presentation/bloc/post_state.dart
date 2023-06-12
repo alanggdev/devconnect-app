@@ -29,6 +29,14 @@ class LoadedDetailPost extends PostState {
   LoadedDetailPost({required this.post, required this.comments});
 }
 
+class CreatingComment extends PostState {}
+
+class CreatedComment extends PostState {
+  final String statusComment;
+
+  CreatedComment({required this.statusComment});
+}
+
 class Error extends PostState {
   final String error;
 

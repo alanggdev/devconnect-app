@@ -28,7 +28,7 @@ class CommentModel extends Comment {
     );
   }
 
-  static Map<String, dynamic> fromEntityToJson(CommentModel comment) {
+  static Map<String, dynamic> fromEntityToJson(Comment comment) {
     return {
       'post_comment': comment.postComment,
       'author': comment.author,

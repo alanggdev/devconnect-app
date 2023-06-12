@@ -1,6 +1,7 @@
 import 'package:dev_connect_app/env_keys.dart';
 import 'package:dev_connect_app/features/post/data/models/comment_model.dart';
 import 'package:dev_connect_app/features/post/data/models/post_model.dart';
+import 'package:dev_connect_app/features/post/domain/entities/comment.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -14,6 +15,7 @@ abstract class PostDatasource {
   Future<PostModel> getPostDetail(int postid);
   Future<List<PostModel>> getAllPosts();
   Future<List<CommentModel>> getPostComments(int postid);
+  Future<String> createComment(Comment commentData);
 }
 
 class PostDatasourceImpl implements PostDatasource {
@@ -147,6 +149,29 @@ class PostDatasourceImpl implements PostDatasource {
       } else {
         return comments;
       }
+    } else {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<String> createComment(Comment commentData) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? access = prefs.getString('access');
+
+    var headers = {
+      'Authorization': 'Bearer $access',
+      'Content-Type': 'application/json'
+    };
+    var url = Uri.https(apiURI, '/comment/create');
+
+    dynamic body = CommentModel.fromEntityToJson(commentData);
+
+    var response =
+        await http.post(url, body: convert.jsonEncode(body), headers: headers);
+
+    if (response.statusCode == 200) {
+      return "Success";
     } else {
       throw Exception();
     }

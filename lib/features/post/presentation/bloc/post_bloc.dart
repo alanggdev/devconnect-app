@@ -1,5 +1,6 @@
 import 'package:dev_connect_app/features/post/domain/entities/comment.dart';
 import 'package:dev_connect_app/features/post/domain/entities/post.dart';
+import 'package:dev_connect_app/features/post/domain/usecases/create_comment.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_all_posts.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_detail_post.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_post_comments.dart';
@@ -14,12 +15,14 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final GetAllPostsUseCase getAllPostsUseCase;
   final GetDetailPostUseCase getDetailPostUseCase;
   final GetPostCommentsUseCase getPostCommentsUseCase;
+  final CreateCommentUseCase createCommentUseCase;
 
   PostBloc(
       {required this.updatePostUseCase,
       required this.getAllPostsUseCase,
       required this.getDetailPostUseCase,
-      required this.getPostCommentsUseCase})
+      required this.getPostCommentsUseCase,
+      required this.createCommentUseCase})
       : super(InitialState()) {
     on<PostEvent>((event, emit) async {
       if (event is LikePost) {
@@ -42,8 +45,22 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         try {
           emit(LoadingDetailPost());
           Post postDetail = await getDetailPostUseCase.execute(event.postid);
-          List<Comment> postComments = await getPostCommentsUseCase.execute(event.postid);
+          List<Comment> postComments =
+              await getPostCommentsUseCase.execute(event.postid);
           emit(LoadedDetailPost(post: postDetail, comments: postComments));
+        } catch (e) {
+          emit(Error(error: e.toString()));
+        }
+      } else if (event is CreateComment) {
+        try {
+          emit(CreatingComment());
+          Comment commentData = Comment(
+              postComment: event.postid,
+              author: event.userid,
+              description: event.description,
+              date: event.date);
+          String status = await createCommentUseCase.execute(commentData);
+          emit(CreatedComment(statusComment: status));
         } catch (e) {
           emit(Error(error: e.toString()));
         }

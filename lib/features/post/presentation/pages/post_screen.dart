@@ -2,13 +2,15 @@ import 'package:dev_connect_app/env_keys.dart';
 import 'package:dev_connect_app/features/post/domain/entities/post.dart';
 import 'package:dev_connect_app/features/post/presentation/bloc/post_bloc.dart';
 import 'package:dev_connect_app/features/post/presentation/pages/detail_post_screen.dart';
-import 'package:dev_connect_app/features/profile/presentation/bloc/profile_bloc.dart' as profile_bloc;
+import 'package:dev_connect_app/features/profile/presentation/bloc/profile_bloc.dart'
+    as profile_bloc;
 import 'package:dev_connect_app/features/profile/presentation/pages/profile_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class PostScreen extends StatefulWidget {
   final Post profilePost;
@@ -332,7 +334,9 @@ class _PostScreenState extends State<PostScreen> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       content: commentLabel(
-                                          context, commentController, widget.profilePost),
+                                          context,
+                                          commentController,
+                                          widget.profilePost),
                                     );
                                   },
                                 );
@@ -359,10 +363,14 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
-  SizedBox commentLabel(BuildContext context, TextEditingController commentController, Post profilePost) {
-    context.read<profile_bloc.ProfileBloc>().add(profile_bloc.GetProfile(userid: useridvisit!));
+  SizedBox commentLabel(BuildContext context,
+      TextEditingController commentController, Post profilePost) {
+    context
+        .read<profile_bloc.ProfileBloc>()
+        .add(profile_bloc.GetProfile(userid: useridvisit!));
     return SizedBox(
-      child: BlocBuilder<profile_bloc.ProfileBloc, profile_bloc.ProfileState>(builder: (context, stateProfile) {
+      child: BlocBuilder<profile_bloc.ProfileBloc, profile_bloc.ProfileState>(
+          builder: (context, stateProfile) {
         if (stateProfile is profile_bloc.LoadingProfile) {
           return const SizedBox(
             height: 60,
@@ -434,7 +442,20 @@ class _PostScreenState extends State<PostScreen> {
                           width: 85,
                           child: TextButton(
                             onPressed: () {
-                              print(commentController.text);
+                              String commentText =
+                                  commentController.text.trim();
+                              if (commentText.isNotEmpty) {
+                                DateTime now = DateTime.now();
+                                String formattedDate =
+                                    DateFormat('dd/MM/yyyy hh:mma').format(now);
+                                context.read<PostBloc>().add(CreateComment(
+                                    postid: widget.profilePost.id!,
+                                    userid: useridvisit!,
+                                    description: commentText,
+                                    date: formattedDate));
+                                Navigator.pop(context);
+                                context.read<PostBloc>().add(GetDetailPost(postid: widget.profilePost.id!));
+                              }
                             },
                             style: OutlinedButton.styleFrom(
                               foregroundColor: Colors.white,

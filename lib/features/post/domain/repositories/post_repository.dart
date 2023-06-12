@@ -6,7 +6,5 @@ abstract class PostRepository {
   Future<List<Post>> getAllPosts();
   Future<Post> getPostDetail(int postid);
   Future<List<Comment>> getPostComments(int postid);
-  // Future<String> createPost(Post postData);
-  // Future<String> deletePost(int postid);
-  // Future<List<Post>> getPollowingPosts();
+  Future<String> createComment(Comment commentData);
 }
