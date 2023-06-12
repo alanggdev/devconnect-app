@@ -37,6 +37,14 @@ class CreatedComment extends PostState {
   CreatedComment({required this.statusComment});
 }
 
+class CreatingPost extends PostState {}
+
+class CreatedPost extends PostState {
+  List<Post> publicPosts;
+
+  CreatedPost({required this.publicPosts});
+}
+
 class Error extends PostState {
   final String error;
 

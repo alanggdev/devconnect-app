@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:dev_connect_app/features/post/domain/entities/comment.dart';
 import 'package:dev_connect_app/features/post/domain/entities/post.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/create_comment.dart';
+import 'package:dev_connect_app/features/post/domain/usecases/create_post.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_all_posts.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_detail_post.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_post_comments.dart';
@@ -16,13 +19,15 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final GetDetailPostUseCase getDetailPostUseCase;
   final GetPostCommentsUseCase getPostCommentsUseCase;
   final CreateCommentUseCase createCommentUseCase;
+  final CreatePostUseCase createPostUseCase;
 
   PostBloc(
       {required this.updatePostUseCase,
       required this.getAllPostsUseCase,
       required this.getDetailPostUseCase,
       required this.getPostCommentsUseCase,
-      required this.createCommentUseCase})
+      required this.createCommentUseCase,
+      required this.createPostUseCase})
       : super(InitialState()) {
     on<PostEvent>((event, emit) async {
       if (event is LikePost) {
@@ -61,6 +66,19 @@ class PostBloc extends Bloc<PostEvent, PostState> {
               date: event.date);
           String status = await createCommentUseCase.execute(commentData);
           emit(CreatedComment(statusComment: status));
+        } catch (e) {
+          emit(Error(error: e.toString()));
+        }
+      } else if (event is CreatePost) {
+        try {
+          // emit(CreatingPost());
+          Post postData = Post(
+              author: event.userid,
+              description: event.description,
+              date: event.date,
+              mediaFile: event.mediaFile);
+          List<Post> publicPost = await createPostUseCase.execute(postData);
+          // emit(CreatedPost(publicPosts: publicPost));
         } catch (e) {
           emit(Error(error: e.toString()));
         }

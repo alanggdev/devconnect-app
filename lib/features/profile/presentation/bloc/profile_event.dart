@@ -7,3 +7,9 @@ class GetProfile extends ProfileEvent {
 
   GetProfile({required this.userid});
 }
+
+class FollowProfile extends ProfileEvent {
+  final int profileid, userid, profileuserid;
+
+  FollowProfile({required this.profileid, required this.userid, required this.profileuserid});
+}

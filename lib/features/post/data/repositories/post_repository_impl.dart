@@ -2,6 +2,7 @@ import 'package:dev_connect_app/features/post/data/datasources/post_remote.dart'
 import 'package:dev_connect_app/features/post/data/models/comment_model.dart';
 import 'package:dev_connect_app/features/post/data/models/post_model.dart';
 import 'package:dev_connect_app/features/post/domain/entities/comment.dart';
+import 'package:dev_connect_app/features/post/domain/entities/post.dart';
 import 'package:dev_connect_app/features/post/domain/repositories/post_repository.dart';
 
 class PostRepositoryImpl implements PostRepository {
@@ -32,5 +33,10 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<String> createComment(Comment commentData) async {
     return await postDatasource.createComment(commentData);
+  }
+
+  @override
+  Future<List<PostModel>> createPost(Post postData) async {
+    return await postDatasource.createPost(postData);
   }
 }

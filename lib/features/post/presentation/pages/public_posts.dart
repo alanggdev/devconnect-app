@@ -112,21 +112,21 @@ class _PublicPostsScreenState extends State<PublicPostsScreen> {
                   color: Color(0xff3B47B6),
                 ),
               ),
-              TextButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.search),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: const Color(0xff6EBCDF),
-                  minimumSize: const Size(150, 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  shadowColor: Colors.black,
-                  elevation: 6,
-                ),
-                label: const Text('Buscar'),
-              ),
+              // TextButton.icon(
+              //   onPressed: () {},
+              //   icon: const Icon(Icons.search),
+              //   style: OutlinedButton.styleFrom(
+              //     foregroundColor: Colors.white,
+              //     backgroundColor: const Color(0xff6EBCDF),
+              //     minimumSize: const Size(150, 8),
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(8),
+              //     ),
+              //     shadowColor: Colors.black,
+              //     elevation: 6,
+              //   ),
+              //   label: const Text('Buscar'),
+              // ),
               BlocBuilder<PostBloc, PostState>(
                 builder: (context, state) {
                   if (state is LoadingPublicPosts) {

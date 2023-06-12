@@ -2,6 +2,8 @@ import 'package:dev_connect_app/env_keys.dart';
 import 'package:dev_connect_app/features/post/data/models/comment_model.dart';
 import 'package:dev_connect_app/features/post/data/models/post_model.dart';
 import 'package:dev_connect_app/features/post/domain/entities/comment.dart';
+import 'package:dev_connect_app/features/post/domain/entities/post.dart';
+import 'package:dev_connect_app/features/profile/data/models/profile_post_model.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -16,6 +18,7 @@ abstract class PostDatasource {
   Future<List<PostModel>> getAllPosts();
   Future<List<CommentModel>> getPostComments(int postid);
   Future<String> createComment(Comment commentData);
+  Future<List<PostModel>> createPost(Post postData);
 }
 
 class PostDatasourceImpl implements PostDatasource {
@@ -175,5 +178,61 @@ class PostDatasourceImpl implements PostDatasource {
     } else {
       throw Exception();
     }
+  }
+
+  @override
+  Future<List<PostModel>> createPost(Post postData) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? access = prefs.getString('access');
+
+    var headers = {
+      'Authorization': 'Bearer $access',
+      'Content-Type': 'application/json'
+    };
+    var url = Uri.https(apiURI, '/post/create');
+
+    dynamic body;
+    if (postData.mediaFile == null) {
+      body = PostModel.fromEntityToJsonCreate(postData);
+      var response = await http.post(url,
+          body: convert.jsonEncode(body), headers: headers);
+
+      if (response.statusCode == 200) {
+        List<PostModel> listUpdatedCreated = await getAllPosts();
+        return listUpdatedCreated;
+      } else {
+        throw Exception();
+      }
+    } else {
+      final userProfileData = {
+        'author': postData.author,
+        'description': postData.description,
+        'date': postData.date
+      };
+
+      var request = http.MultipartRequest(
+          'POST', Uri.parse('https://$apiURI/post/create'));
+      request = jsonToFormData(request, userProfileData);
+      request.headers['X-Requested-With'] = "XMLHttpRequest";
+      request.headers['Authorization'] = "Bearer $access";
+
+      request.files.add(await http.MultipartFile.fromPath(
+          'media', postData.mediaFile!.path));
+
+      final responseProfile = await request.send();
+      if (responseProfile.statusCode == 200) {
+        List<PostModel> listUpdatedCreated = await getAllPosts();
+        return listUpdatedCreated;
+      } else {
+        throw Exception();
+      }
+    }
+  }
+
+  jsonToFormData(http.MultipartRequest request, Map<String, dynamic> data) {
+    for (var key in data.keys) {
+      request.fields[key] = data[key].toString();
+    }
+    return request;
   }
 }

@@ -7,14 +7,18 @@ class ProfileModel extends Profile {
       required String description,
       required String status,
       required dynamic user,
-      required int userId})
+      required int userId,
+      required dynamic followers,
+      required dynamic following})
       : super(
             id: id,
             avatarURL: avatarURL,
             description: description,
             status: status,
             user: user,
-            userId: userId);
+            userId: userId,
+            followers: followers,
+            following: following);
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
@@ -23,7 +27,9 @@ class ProfileModel extends Profile {
         description: json['user_description'],
         status: json['user_status'],
         user: json['user'],
-        userId: json['user_profile']);
+        userId: json['user_profile'],
+        followers: json['user_followers'],
+        following: json['user_following']);
   }
 
   static Map<String, dynamic> fromEntityToJson(Profile profile) {

@@ -51,7 +51,7 @@ class PostModel extends Post {
     return {'author': profile.author, 'likes': profile.likes};
   }
 
-  static Map<String, dynamic> fromEntityToJsonCreate(PostModel profile) {
+  static Map<String, dynamic> fromEntityToJsonCreate(Post profile) {
     return {
       'author': profile.author,
       'description': profile.description,
@@ -59,7 +59,7 @@ class PostModel extends Post {
     };
   }
 
-  static Map<String, dynamic> fromEntityToJsonCreateMedia(PostModel profile) {
+  static Map<String, dynamic> fromEntityToJsonCreateMedia(Post profile) {
     return {
       'author': profile.author,
       'description': profile.description,

@@ -89,6 +89,7 @@ class _PostScreenState extends State<PostScreen> {
           ],
         );
       } else {
+        // return Text(post.mediaURL.toString());
         return Image.network(post.mediaURL.toString());
       }
     }

@@ -1,3 +1,5 @@
+import 'package:dev_connect_app/features/post/domain/usecases/create_post.dart';
+import 'package:dev_connect_app/features/profile/domain/usecases/update_profile.dart';
 import 'package:dev_connect_app/features/session/data/datasources/session_remote.dart';
 import 'package:dev_connect_app/features/profile/data/datasources/profile_remote.dart';
 import 'package:dev_connect_app/features/post/data/datasources/post_remote.dart';
@@ -29,6 +31,7 @@ class UseCaseConfig {
   ProfileRepositoryImpl? profileRepositoryImpl;
   GetProfileUseCase? getProfileUseCase;
   GetProfilePostsUseCase? getProfilePostsUseCase;
+  UpdateProfileUseCase? updateProfileUseCase;
 
   PostDatasourceImpl? postDatasourceImpl;
   PostRepositoryImpl? postRepositoryImpl;
@@ -37,6 +40,7 @@ class UseCaseConfig {
   GetDetailPostUseCase? getDetailPostUseCase;
   GetPostCommentsUseCase? getPostCommentsUseCase;
   CreateCommentUseCase? createCommentUseCase;
+  CreatePostUseCase? createPostUseCase;
 
   UseCaseConfig() {
     signInDatasourceImpl = SignInDatasourceImpl();
@@ -51,6 +55,7 @@ class UseCaseConfig {
     profileRepositoryImpl = ProfileRepositoryImpl(profileDatasource: profileDatasourceImp!);
     getProfileUseCase = GetProfileUseCase(profileRepositoryImpl!);
     getProfilePostsUseCase = GetProfilePostsUseCase(profileRepositoryImpl!);
+    updateProfileUseCase = UpdateProfileUseCase(profileRepositoryImpl!);
 
     postDatasourceImpl = PostDatasourceImpl();
     postRepositoryImpl = PostRepositoryImpl(postDatasource: postDatasourceImpl!);
@@ -59,5 +64,6 @@ class UseCaseConfig {
     getDetailPostUseCase = GetDetailPostUseCase(postRepositoryImpl!);
     getPostCommentsUseCase = GetPostCommentsUseCase(postRepositoryImpl!);
     createCommentUseCase = CreateCommentUseCase(postRepositoryImpl!);
+    createPostUseCase = CreatePostUseCase(postRepositoryImpl!);
   }
 }

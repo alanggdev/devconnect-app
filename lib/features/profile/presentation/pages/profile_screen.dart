@@ -1,3 +1,4 @@
+import 'package:dev_connect_app/features/post/presentation/pages/home_screen.dart';
 import 'package:dev_connect_app/features/post/presentation/pages/profile_posts_screen.dart';
 import 'package:dev_connect_app/features/profile/presentation/bloc/profile_bloc.dart';
 
@@ -22,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   void initState() {
     super.initState();
     context.read<ProfileBloc>().add(GetProfile(userid: widget.userid));
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 1, vsync: this);
     getIDUserVisit();
   }
 
@@ -55,30 +56,45 @@ class _ProfileScreenState extends State<ProfileScreen>
           backgroundColor: const Color(0xffF4F4F4),
           title: GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomeScreen(),
+                ),
+              );
             },
             child: Row(
-              children: [
-                if (showBack == false)
-                  const Text('Tu perfil', style: TextStyle(color: Colors.black),)
-                else
-                  const Icon(
-                    Icons.navigate_before,
+              children: const [
+                Icon(
+                  Icons.navigate_before,
+                  color: Colors.black,
+                ),
+                Text(
+                  'Regresar',
+                  style: TextStyle(
                     color: Colors.black,
+                    fontSize: 18,
                   ),
-                if (showBack == false)
-                  Container()
-                else
-                  const Text(
-                    'Regresar',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                  ),
+                ),
               ],
             ),
           ),
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.autorenew,
+                  size: 26,
+                  color: Colors.black,
+                ),
+                tooltip: 'Actualizar',
+                onPressed: () {
+                  context.read<ProfileBloc>().add(GetProfile(userid: widget.userid));
+                },
+              ),
+            ),
+          ],
         ),
         body: BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
           if (state is LoadingProfile) {
@@ -89,6 +105,9 @@ class _ProfileScreenState extends State<ProfileScreen>
               ),
             );
           } else if (state is LoadedProfile) {
+            final bool isFollowed = state.profile.followers
+                .toString()
+                .contains(useridvisit.toString());
             return NestedScrollView(
                 headerSliverBuilder:
                     (BuildContext context, bool innerBoxIsScrolled) {
@@ -131,17 +150,64 @@ class _ProfileScreenState extends State<ProfileScreen>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    '${state.profile.user['first_name']} ${state.profile.user['last_name']}',
-                                    style: const TextStyle(
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xff242C71)),
-                                  ),
-                                  Text(
-                                    '@${state.profile.user['username']}',
-                                    style: const TextStyle(
-                                        fontSize: 18, color: Color(0xff3B47B6)),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${state.profile.user['first_name']} ${state.profile.user['last_name']}',
+                                            style: const TextStyle(
+                                                fontSize: 28,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color(0xff242C71)),
+                                          ),
+                                          Text(
+                                            '@${state.profile.user['username']}',
+                                            style: const TextStyle(
+                                                fontSize: 18,
+                                                color: Color(0xff3B47B6)),
+                                          ),
+                                        ],
+                                      ),
+                                      if (state.profile.userId != useridvisit)
+                                        SizedBox(
+                                          width: 100,
+                                          child: TextButton(
+                                            onPressed: () {
+                                              context.read<ProfileBloc>().add(
+                                                  FollowProfile(
+                                                      profileid:
+                                                          state.profile.id,
+                                                      userid: useridvisit!,
+                                                      profileuserid: state
+                                                          .profile.userId));
+                                              context.read<ProfileBloc>().add(
+                                                  GetProfile(
+                                                      userid: widget.userid));
+                                            },
+                                            style: OutlinedButton.styleFrom(
+                                              foregroundColor: Colors.white,
+                                              backgroundColor: isFollowed
+                                                  ? const Color(0xff242C71)
+                                                  : const Color(0xff6EBCDF),
+                                              minimumSize: const Size(150, 8),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              shadowColor: Colors.black,
+                                              elevation: 6,
+                                            ),
+                                            child: Text(isFollowed
+                                                ? "Siguiendo"
+                                                : "Seguir"),
+                                          ),
+                                        ),
+                                    ],
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 10),
@@ -179,14 +245,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         Column(
-                                          children: const [
+                                          children: [
                                             Text(
-                                              "999",
-                                              style: TextStyle(
+                                              state.profile.following.length
+                                                  .toString(),
+                                              style: const TextStyle(
                                                   fontSize: 18,
                                                   color: Color(0xff242C71)),
                                             ),
-                                            Text(
+                                            const Text(
                                               "Seguidos",
                                               style: TextStyle(
                                                   fontSize: 18,
@@ -195,14 +262,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           ],
                                         ),
                                         Column(
-                                          children: const [
+                                          children: [
                                             Text(
-                                              "999",
-                                              style: TextStyle(
+                                              state.profile.followers.length
+                                                  .toString(),
+                                              style: const TextStyle(
                                                   fontSize: 18,
                                                   color: Color(0xff242C71)),
                                             ),
-                                            Text(
+                                            const Text(
                                               "Seguidores",
                                               style: TextStyle(
                                                   fontSize: 18,
@@ -241,9 +309,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                               Tab(
                                 text: 'Publicaciones',
                               ),
-                              Tab(
-                                text: 'Comentarios',
-                              ),
+                              // Tab(
+                              //   text: 'Comentarios',
+                              // ),
                             ],
                             labelColor: const Color(0xff242C71),
                             unselectedLabelColor: const Color(0xff6EBCDF),
@@ -270,7 +338,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             state.profilePosts[index], isLikedNotifier);
                       },
                     ),
-                  const Center(child: Text('Sin comentarios'))
+                  // const Center(child: Text('Sin comentarios'))
                 ]));
           } else if (state is Error) {
             return Center(

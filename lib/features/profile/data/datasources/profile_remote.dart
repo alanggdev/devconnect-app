@@ -1,6 +1,7 @@
 import 'package:dev_connect_app/env_keys.dart';
 import 'package:dev_connect_app/features/profile/data/models/profile_model.dart';
 import 'package:dev_connect_app/features/profile/data/models/profile_post_model.dart';
+import 'package:dev_connect_app/features/profile/domain/entities/profile.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -12,6 +13,7 @@ String apiURI = EnvKeys.serverURI;
 abstract class ProfileDatasource {
   Future<ProfileModel> getProfile(int userid);
   Future<List<ProfilePostModel>> getProfilePosts(int userid);
+  Future<void> updateProfile(int profileid, int userid, int profileuserid);
 }
 
 class ProfileDatasourceImp implements ProfileDatasource {
@@ -77,5 +79,56 @@ class ProfileDatasourceImp implements ProfileDatasource {
     } else {
       throw Exception();
     }
+  }
+
+  @override
+  Future<void> updateProfile(
+      int profileid, int userid, int profileuserid) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? access = prefs.getString('access');
+
+    var url = Uri.https(apiURI, '/userprofile/update/$profileid');
+    var headers = {
+      'Authorization': 'Bearer $access',
+      'Content-Type': 'application/json'
+    };
+
+    getProfile(profileuserid).then((userProfile) {
+      List<dynamic> followers = userProfile.followers;
+      if (followers.contains(userid)) {
+        followers.remove(userid);
+      } else {
+        followers.add(userid);
+      }
+
+      Map<String, dynamic> json = {
+        'user_profile': profileuserid,
+        'user_followers': followers
+      };
+
+      http
+          .patch(url, body: convert.jsonEncode(json), headers: headers)
+          .then((response) {
+        // getProfileToFollowing
+        getProfile(userid).then((userProfileNew) {
+          List<dynamic> following = userProfileNew.following;
+          if (following.contains(profileuserid)) {
+            following.remove(profileuserid);
+          } else {
+            following.add(profileuserid);
+          }
+
+          Map<String, dynamic> jsonNew = {
+            'user_profile': userProfileNew.userId,
+            'user_following': following
+          };
+
+          var url =
+              Uri.https(apiURI, '/userprofile/update/${userProfileNew.id}');
+
+          http.patch(url, body: convert.jsonEncode(jsonNew), headers: headers);
+        });
+      });
+    });
   }
 }
