@@ -1,4 +1,5 @@
 import 'package:dev_connect_app/env_keys.dart';
+import 'package:dev_connect_app/features/post/data/models/comment_model.dart';
 import 'package:dev_connect_app/features/post/data/models/post_model.dart';
 
 import 'package:http/http.dart' as http;
@@ -12,6 +13,7 @@ abstract class PostDatasource {
   Future<String> updatePost(int postid, int userid);
   Future<PostModel> getPostDetail(int postid);
   Future<List<PostModel>> getAllPosts();
+  Future<List<CommentModel>> getPostComments(int postid);
 }
 
 class PostDatasourceImpl implements PostDatasource {
@@ -105,6 +107,45 @@ class PostDatasourceImpl implements PostDatasource {
         return postList;
       } else {
         return postList;
+      }
+    } else {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<List<CommentModel>> getPostComments(int postid) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? access = prefs.getString('access');
+
+    var url = Uri.https(apiURI, '/comment/post/$postid');
+    var headers = {'Authorization': 'Bearer $access'};
+
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List<CommentModel> comments = [];
+      var responseDecoded = convert.jsonDecode(response.body);
+      var payLoad = responseDecoded['pay_load'];
+
+      if (payLoad != 'Not found') {
+        for (var object in payLoad) {
+          CommentModel commentModel = CommentModel.fromJson(object);
+          comments.add(commentModel);
+        }
+
+        comments.sort((a, b) {
+          // Parse the date strings into DateTime objects
+          DateTime dateA = DateFormat('dd/MM/yyyy hh:mma').parse(a.date);
+          DateTime dateB = DateFormat('dd/MM/yyyy hh:mma').parse(b.date);
+
+          // Compare the dates
+          return dateB.compareTo(dateA);
+        });
+
+        return comments;
+      } else {
+        return comments;
       }
     } else {
       throw Exception();

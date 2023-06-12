@@ -32,7 +32,8 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) => PostBloc(
                 updatePostUseCase: usecaseConfig.updatePostUseCase!,
                 getAllPostsUseCase: usecaseConfig.getAllPostsUseCase!,
-                getDetailPostUseCase: usecaseConfig.getDetailPostUseCase!)),
+                getDetailPostUseCase: usecaseConfig.getDetailPostUseCase!,
+                getPostCommentsUseCase: usecaseConfig.getPostCommentsUseCase!)),
       ],
       child: MaterialApp(
         theme: ThemeData(

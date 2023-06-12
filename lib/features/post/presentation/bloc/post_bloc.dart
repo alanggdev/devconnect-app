@@ -1,6 +1,8 @@
+import 'package:dev_connect_app/features/post/domain/entities/comment.dart';
 import 'package:dev_connect_app/features/post/domain/entities/post.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_all_posts.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_detail_post.dart';
+import 'package:dev_connect_app/features/post/domain/usecases/get_post_comments.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/update_post.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,8 +13,14 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final UpdatePostUseCase updatePostUseCase;
   final GetAllPostsUseCase getAllPostsUseCase;
   final GetDetailPostUseCase getDetailPostUseCase;
+  final GetPostCommentsUseCase getPostCommentsUseCase;
 
-  PostBloc({required this.updatePostUseCase, required this.getAllPostsUseCase, required this.getDetailPostUseCase}) : super(InitialState()) {
+  PostBloc(
+      {required this.updatePostUseCase,
+      required this.getAllPostsUseCase,
+      required this.getDetailPostUseCase,
+      required this.getPostCommentsUseCase})
+      : super(InitialState()) {
     on<PostEvent>((event, emit) async {
       if (event is LikePost) {
         try {
@@ -34,7 +42,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         try {
           emit(LoadingDetailPost());
           Post postDetail = await getDetailPostUseCase.execute(event.postid);
-          emit(LoadedDetailPost(post: postDetail));
+          List<Comment> postComments = await getPostCommentsUseCase.execute(event.postid);
+          emit(LoadedDetailPost(post: postDetail, comments: postComments));
         } catch (e) {
           emit(Error(error: e.toString()));
         }

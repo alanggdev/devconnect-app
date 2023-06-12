@@ -24,8 +24,9 @@ class LoadingDetailPost extends PostState {}
 
 class LoadedDetailPost extends PostState {
   final Post post;
+  final List<Comment> comments;
 
-  LoadedDetailPost({required this.post});
+  LoadedDetailPost({required this.post, required this.comments});
 }
 
 class Error extends PostState {

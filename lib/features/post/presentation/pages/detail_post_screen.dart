@@ -1,4 +1,5 @@
 import 'package:dev_connect_app/features/post/presentation/bloc/post_bloc.dart';
+import 'package:dev_connect_app/features/post/presentation/pages/comment_screen.dart';
 import 'package:dev_connect_app/features/post/presentation/pages/home_screen.dart';
 import 'package:dev_connect_app/features/post/presentation/pages/post_screen.dart';
 
@@ -109,6 +110,14 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                         return Column(
                           children: [
                             PostScreen(state.post, isLikedNotifier),
+                            if (state.comments.isEmpty)
+                              const Text('Publicación sin comentarios')
+                            else
+                              Column(
+                                children: state.comments.map((comment) {
+                                  return CommentScreen(comment);
+                                }).toList(),
+                              ),
                           ],
                         );
                       }

@@ -1,4 +1,5 @@
 import 'package:dev_connect_app/features/post/data/datasources/post_remote.dart';
+import 'package:dev_connect_app/features/post/data/models/comment_model.dart';
 import 'package:dev_connect_app/features/post/data/models/post_model.dart';
 import 'package:dev_connect_app/features/post/domain/repositories/post_repository.dart';
 
@@ -20,5 +21,10 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<PostModel> getPostDetail(int postid) async {
     return await postDatasource.getPostDetail(postid);
+  }
+
+  @override
+  Future<List<CommentModel>> getPostComments(int postid) async {
+    return await postDatasource.getPostComments(postid);
   }
 }

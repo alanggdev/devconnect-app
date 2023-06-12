@@ -13,6 +13,7 @@ import 'package:dev_connect_app/features/profile/domain/usecases/get_profile_pos
 import 'package:dev_connect_app/features/post/domain/usecases/update_post.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_all_posts.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_detail_post.dart';
+import 'package:dev_connect_app/features/post/domain/usecases/get_post_comments.dart';
 
 class UseCaseConfig {
   SignInDatasourceImpl? signInDatasourceImpl;
@@ -33,6 +34,7 @@ class UseCaseConfig {
   UpdatePostUseCase? updatePostUseCase;
   GetAllPostsUseCase? getAllPostsUseCase;
   GetDetailPostUseCase? getDetailPostUseCase;
+  GetPostCommentsUseCase? getPostCommentsUseCase;
 
   UseCaseConfig() {
     signInDatasourceImpl = SignInDatasourceImpl();
@@ -53,5 +55,6 @@ class UseCaseConfig {
     updatePostUseCase = UpdatePostUseCase(postRepositoryImpl!);
     getAllPostsUseCase = GetAllPostsUseCase(postRepositoryImpl!);
     getDetailPostUseCase = GetDetailPostUseCase(postRepositoryImpl!);
+    getPostCommentsUseCase = GetPostCommentsUseCase(postRepositoryImpl!);
   }
 }
