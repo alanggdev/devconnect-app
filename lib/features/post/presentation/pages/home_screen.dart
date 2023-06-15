@@ -1,4 +1,3 @@
-import 'package:dev_connect_app/features/post/domain/entities/post.dart';
 import 'package:dev_connect_app/features/post/presentation/bloc/post_bloc.dart';
 import 'package:dev_connect_app/features/profile/presentation/bloc/profile_bloc.dart'
     as profile_bloc;
@@ -158,30 +157,30 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 5),
-                    //   child: MaterialButton(
-                    //     onPressed: () {
-                    //       setState(() {
-                    //         currentScreen = screens[1];
-                    //         currentTab = 1;
-                    //       });
-                    //     },
-                    //     minWidth: 40,
-                    //     child: Column(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [
-                    //         Icon(
-                    //           Icons.public,
-                    //           color: currentTab == 1
-                    //               ? const Color(0xff6EBCDF)
-                    //               : Colors.white,
-                    //           size: 30,
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            currentScreen = screens[1];
+                            currentTab = 1;
+                          });
+                        },
+                        minWidth: 40,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.public,
+                              color: currentTab == 1
+                                  ? const Color(0xff6EBCDF)
+                                  : Colors.white,
+                              size: 30,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 Row(
@@ -216,30 +215,30 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 15),
-                    //   child: MaterialButton(
-                    //     onPressed: () {
-                    //       setState(() {
-                    //         currentScreen = screens[3];
-                    //         currentTab = 3;
-                    //       });
-                    //     },
-                    //     minWidth: 40,
-                    //     child: Column(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [
-                    //         Icon(
-                    //           Icons.settings,
-                    //           color: currentTab == 3
-                    //               ? const Color(0xff6EBCDF)
-                    //               : Colors.white,
-                    //           size: 30,
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // )
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            currentScreen = screens[3];
+                            currentTab = 3;
+                          });
+                        },
+                        minWidth: 40,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.settings,
+                              color: currentTab == 3
+                                  ? const Color(0xff6EBCDF)
+                                  : Colors.white,
+                              size: 30,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ],

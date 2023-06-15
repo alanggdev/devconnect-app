@@ -7,6 +7,7 @@ import 'package:dev_connect_app/features/post/domain/usecases/create_post.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_all_posts.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_detail_post.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_post_comments.dart';
+import 'package:dev_connect_app/features/post/domain/usecases/search_user.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/update_post.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,6 +21,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final GetPostCommentsUseCase getPostCommentsUseCase;
   final CreateCommentUseCase createCommentUseCase;
   final CreatePostUseCase createPostUseCase;
+  final SearchUserUseCase searchUserUseCase;
 
   PostBloc(
       {required this.updatePostUseCase,
@@ -27,10 +29,19 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       required this.getDetailPostUseCase,
       required this.getPostCommentsUseCase,
       required this.createCommentUseCase,
-      required this.createPostUseCase})
+      required this.createPostUseCase,
+      required this.searchUserUseCase})
       : super(InitialState()) {
     on<PostEvent>((event, emit) async {
-      if (event is LikePost) {
+      if (event is SearchUser) {
+        try {
+          emit(SearchingUser());
+          List<dynamic> users = await searchUserUseCase.execute(event.username);
+          emit(UserFound(users: users));
+        } catch (e) {
+          emit(Error(error: e.toString()));
+        }
+      } else if (event is LikePost) {
         try {
           // emit(UpdatingPost());
           await updatePostUseCase.execute(event.postid, event.userid);
@@ -77,7 +88,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
               description: event.description,
               date: event.date,
               mediaFile: event.mediaFile);
-          List<Post> publicPost = await createPostUseCase.execute(postData);
+          await createPostUseCase.execute(postData);
           // emit(CreatedPost(publicPosts: publicPost));
         } catch (e) {
           emit(Error(error: e.toString()));

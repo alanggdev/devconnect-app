@@ -1,4 +1,5 @@
 import 'package:dev_connect_app/features/post/domain/usecases/create_post.dart';
+import 'package:dev_connect_app/features/post/domain/usecases/search_user.dart';
 import 'package:dev_connect_app/features/profile/domain/usecases/update_profile.dart';
 import 'package:dev_connect_app/features/session/data/datasources/session_remote.dart';
 import 'package:dev_connect_app/features/profile/data/datasources/profile_remote.dart';
@@ -41,6 +42,7 @@ class UseCaseConfig {
   GetPostCommentsUseCase? getPostCommentsUseCase;
   CreateCommentUseCase? createCommentUseCase;
   CreatePostUseCase? createPostUseCase;
+  SearchUserUseCase? searchUserUseCase;
 
   UseCaseConfig() {
     signInDatasourceImpl = SignInDatasourceImpl();
@@ -65,5 +67,6 @@ class UseCaseConfig {
     getPostCommentsUseCase = GetPostCommentsUseCase(postRepositoryImpl!);
     createCommentUseCase = CreateCommentUseCase(postRepositoryImpl!);
     createPostUseCase = CreatePostUseCase(postRepositoryImpl!);
+    searchUserUseCase = SearchUserUseCase(postRepositoryImpl!);
   }
 }

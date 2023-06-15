@@ -45,6 +45,14 @@ class CreatedPost extends PostState {
   CreatedPost({required this.publicPosts});
 }
 
+class SearchingUser extends PostState {}
+
+class UserFound extends PostState {
+  List<dynamic> users;
+
+  UserFound({required this.users});
+}
+
 class Error extends PostState {
   final String error;
 

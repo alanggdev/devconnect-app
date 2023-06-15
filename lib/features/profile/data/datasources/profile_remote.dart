@@ -1,7 +1,6 @@
 import 'package:dev_connect_app/env_keys.dart';
 import 'package:dev_connect_app/features/profile/data/models/profile_model.dart';
 import 'package:dev_connect_app/features/profile/data/models/profile_post_model.dart';
-import 'package:dev_connect_app/features/profile/domain/entities/profile.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;

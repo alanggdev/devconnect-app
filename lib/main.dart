@@ -36,7 +36,8 @@ class MyApp extends StatelessWidget {
                 getDetailPostUseCase: usecaseConfig.getDetailPostUseCase!,
                 getPostCommentsUseCase: usecaseConfig.getPostCommentsUseCase!,
                 createCommentUseCase: usecaseConfig.createCommentUseCase!,
-                createPostUseCase: usecaseConfig.createPostUseCase!)),
+                createPostUseCase: usecaseConfig.createPostUseCase!,
+                searchUserUseCase: usecaseConfig.searchUserUseCase!)),
       ],
       child: MaterialApp(
         theme: ThemeData(
