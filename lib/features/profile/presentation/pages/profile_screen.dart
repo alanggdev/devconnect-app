@@ -1,5 +1,7 @@
+import 'package:dev_connect_app/env_keys.dart';
 import 'package:dev_connect_app/features/post/presentation/pages/home_screen.dart';
 import 'package:dev_connect_app/features/post/presentation/pages/profile_posts_screen.dart';
+import 'package:dev_connect_app/features/profile/domain/entities/profile.dart';
 import 'package:dev_connect_app/features/profile/presentation/bloc/profile_bloc.dart';
 
 import 'package:flutter/material.dart';
@@ -90,7 +92,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
                 tooltip: 'Actualizar',
                 onPressed: () {
-                  context.read<ProfileBloc>().add(GetProfile(userid: widget.userid));
+                  context
+                      .read<ProfileBloc>()
+                      .add(GetProfile(userid: widget.userid));
                 },
               ),
             ),
@@ -244,39 +248,61 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
                                       children: [
-                                        Column(
-                                          children: [
-                                            Text(
-                                              state.profile.following.length
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                  fontSize: 18,
-                                                  color: Color(0xff242C71)),
-                                            ),
-                                            const Text(
-                                              "Seguidos",
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Color(0xff242C71)),
-                                            ),
-                                          ],
+                                        GestureDetector(
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return followingInfo(context,
+                                                    state.profile.followers);
+                                              },
+                                            );
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                state.profile.following.length
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    fontSize: 18,
+                                                    color: Color(0xff242C71)),
+                                              ),
+                                              const Text(
+                                                "Seguidos",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Color(0xff242C71)),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              state.profile.followers.length
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                  fontSize: 18,
-                                                  color: Color(0xff242C71)),
-                                            ),
-                                            const Text(
-                                              "Seguidores",
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Color(0xff242C71)),
-                                            ),
-                                          ],
+                                        GestureDetector(
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return followersInfo(context,
+                                                    state.profile.followers);
+                                              },
+                                            );
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                state.profile.followers.length
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    fontSize: 18,
+                                                    color: Color(0xff242C71)),
+                                              ),
+                                              const Text(
+                                                "Seguidores",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Color(0xff242C71)),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -349,6 +375,168 @@ class _ProfileScreenState extends State<ProfileScreen>
             return Container();
           }
         }),
+      ),
+    );
+  }
+
+  AlertDialog followersInfo(BuildContext context, dynamic followers) {
+    List<dynamic> followDataList = List.from(followers);
+
+    return AlertDialog(
+      contentPadding: EdgeInsets.zero,
+      content: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            const Padding(
+              padding: EdgeInsets.all(12),
+              child: Text(
+                'Seguidores',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+            ),
+            const Divider(
+              color: Color(0xff5D95D1),
+              thickness: 1,
+              height: 1,
+            ),
+            Column(
+              children: followDataList.map(
+                (userinfo) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    child: userLabel(userinfo),
+                  );
+                },
+              ).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  AlertDialog followingInfo(BuildContext context, dynamic following) {
+    List<dynamic> followDataList = List.from(following);
+
+    return AlertDialog(
+      contentPadding: EdgeInsets.zero,
+      content: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            const Padding(
+              padding: EdgeInsets.all(12),
+              child: Text(
+                'Seguidos',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+            ),
+            const Divider(
+              color: Color(0xff5D95D1),
+              thickness: 1,
+              height: 1,
+            ),
+            Column(
+              children: followDataList.map(
+                (userinfo) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    child: userLabel(userinfo),
+                  );
+                },
+              ).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Container userLabel(dynamic userinfo) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xffE1FCFF),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 3,
+            // offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfileScreen(userinfo['pk']),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 5,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                            image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: NetworkImage(
+                                  'https://${EnvKeys.serverURI}${userinfo['profile']['user_avatar']}'),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${userinfo['first_name']} ${userinfo['last_name']}',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              '${userinfo['username']}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Color(0xff6F707A),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
