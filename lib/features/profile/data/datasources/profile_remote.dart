@@ -113,13 +113,11 @@ class ProfileDatasourceImp implements ProfileDatasource {
 
     getProfileSimple(profileuserid).then((userProfile) {
       List<dynamic> followers = userProfile.followers;
-      print(followers);
       if (followers.contains(userid)) {
         followers.remove(userid);
       } else {
         followers.add(userid);
       }
-      print(followers);
 
       Map<String, dynamic> json = {
         'user_profile': profileuserid,

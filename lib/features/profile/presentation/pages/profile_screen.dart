@@ -1,7 +1,6 @@
 import 'package:dev_connect_app/env_keys.dart';
 import 'package:dev_connect_app/features/post/presentation/pages/home_screen.dart';
 import 'package:dev_connect_app/features/post/presentation/pages/profile_posts_screen.dart';
-import 'package:dev_connect_app/features/profile/domain/entities/profile.dart';
 import 'package:dev_connect_app/features/profile/presentation/bloc/profile_bloc.dart';
 
 import 'package:flutter/material.dart';
@@ -58,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           backgroundColor: const Color(0xffF4F4F4),
           title: GestureDetector(
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const HomeScreen(),

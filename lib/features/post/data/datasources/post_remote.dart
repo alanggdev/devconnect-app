@@ -3,7 +3,6 @@ import 'package:dev_connect_app/features/post/data/models/comment_model.dart';
 import 'package:dev_connect_app/features/post/data/models/post_model.dart';
 import 'package:dev_connect_app/features/post/domain/entities/comment.dart';
 import 'package:dev_connect_app/features/post/domain/entities/post.dart';
-import 'package:dev_connect_app/features/profile/data/datasources/profile_remote.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
