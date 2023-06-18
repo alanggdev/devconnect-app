@@ -253,8 +253,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             showDialog(
                                               context: context,
                                               builder: (BuildContext context) {
-                                                return followingInfo(context,
-                                                    state.profile.followers);
+                                                return followersInfo(context,
+                                                    state.profile.following, 'Siguiendo');
                                               },
                                             );
                                           },
@@ -282,7 +282,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return followersInfo(context,
-                                                    state.profile.followers);
+                                                    state.profile.followers, 'Seguidores');
                                               },
                                             );
                                           },
@@ -379,7 +379,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  AlertDialog followersInfo(BuildContext context, dynamic followers) {
+  AlertDialog followersInfo(BuildContext context, dynamic followers, String text) {
     List<dynamic> followDataList = List.from(followers);
 
     return AlertDialog(
@@ -387,48 +387,11 @@ class _ProfileScreenState extends State<ProfileScreen>
       content: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.all(12),
+            Padding(
+              padding: const EdgeInsets.all(12),
               child: Text(
-                'Seguidores',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-            ),
-            const Divider(
-              color: Color(0xff5D95D1),
-              thickness: 1,
-              height: 1,
-            ),
-            Column(
-              children: followDataList.map(
-                (userinfo) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: userLabel(userinfo),
-                  );
-                },
-              ).toList(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  AlertDialog followingInfo(BuildContext context, dynamic following) {
-    List<dynamic> followDataList = List.from(following);
-
-    return AlertDialog(
-      contentPadding: EdgeInsets.zero,
-      content: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.all(12),
-              child: Text(
-                'Seguidos',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                text,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
             ),
             const Divider(
@@ -502,7 +465,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             image: DecorationImage(
                               fit: BoxFit.fill,
                               image: NetworkImage(
-                                  'https://${EnvKeys.serverURI}${userinfo['profile']['user_avatar']}'),
+                                  'https://${EnvKeys.serverURI}${userinfo['profile']}'),
                             ),
                           ),
                         ),
