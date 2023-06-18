@@ -6,6 +6,7 @@ import 'package:dev_connect_app/features/post/domain/usecases/create_comment.dar
 import 'package:dev_connect_app/features/post/domain/usecases/create_post.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_all_posts.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_detail_post.dart';
+import 'package:dev_connect_app/features/post/domain/usecases/get_following_posts.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/get_post_comments.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/search_user.dart';
 import 'package:dev_connect_app/features/post/domain/usecases/update_post.dart';
@@ -22,6 +23,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final CreateCommentUseCase createCommentUseCase;
   final CreatePostUseCase createPostUseCase;
   final SearchUserUseCase searchUserUseCase;
+  final GetFollowingPostsUseCase getFollowingPostsUseCase;
 
   PostBloc(
       {required this.updatePostUseCase,
@@ -30,10 +32,19 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       required this.getPostCommentsUseCase,
       required this.createCommentUseCase,
       required this.createPostUseCase,
-      required this.searchUserUseCase})
+      required this.searchUserUseCase,
+      required this.getFollowingPostsUseCase})
       : super(InitialState()) {
     on<PostEvent>((event, emit) async {
-      if (event is SearchUser) {
+      if (event is GetFollowingPosts) {
+        try {
+          emit(LoadingFollowingPosts());
+          List<Post> followingPosts = await getFollowingPostsUseCase.execute(event.userid);
+          emit(LoadedFollowingPosts(followingPosts: followingPosts));
+        } catch (e) {
+          emit(Error(error: e.toString()));
+        }
+      } else if (event is SearchUser) {
         try {
           emit(SearchingUser());
           List<dynamic> users = await searchUserUseCase.execute(event.username);

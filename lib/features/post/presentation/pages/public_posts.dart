@@ -47,7 +47,7 @@ class _PublicPostsScreenState extends State<PublicPostsScreen> {
               const Padding(
                 padding: EdgeInsets.only(left: 18),
                 child: Text(
-                  'Hola!',
+                  'Dev Connect',
                   style: TextStyle(
                     // color: CustomColors.baseLightBlue,
                     fontSize: 26,
@@ -93,7 +93,7 @@ class _PublicPostsScreenState extends State<PublicPostsScreen> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15),
                           child: Text(
-                            'Publicaciones',
+                            'Explorar',
                             style: TextStyle(
                               // color: PrimaryColors.grayBlue,
                               fontSize: 26,
@@ -135,7 +135,7 @@ class _PublicPostsScreenState extends State<PublicPostsScreen> {
                   shadowColor: Colors.black,
                   elevation: 6,
                 ),
-                label: const Text('Buscar'),
+                label: const Text('Buscar personas'),
               ),
               BlocBuilder<PostBloc, PostState>(
                 builder: (context, state) {
@@ -159,16 +159,42 @@ class _PublicPostsScreenState extends State<PublicPostsScreen> {
                               if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else {
-                                return Column(
-                                  children: state.publicPosts.map((postPublic) {
-                                    final isLikedNotifier = ValueNotifier<bool>(
-                                        postPublic.likes!
-                                            .contains(snapshot.data));
-                                    //
-                                    return PostScreen(
-                                        postPublic, isLikedNotifier);
-                                  }).toList(),
-                                );
+                                if (state.publicPosts.isNotEmpty) {
+                                  return Column(
+                                    children:
+                                        state.publicPosts.map((postPublic) {
+                                      final isLikedNotifier =
+                                          ValueNotifier<bool>(postPublic.likes!
+                                              .contains(snapshot.data));
+                                      //
+                                      return PostScreen(
+                                          postPublic, isLikedNotifier);
+                                    }).toList(),
+                                  );
+                                } else {
+                                  return SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.6,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/empty_posts.png',
+                                          height: 340,
+                                          width: 340,
+                                        ),
+                                        const Text(
+                                          'Aún no hay publicaciones para ver',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 25,
+                                              color: Color(0xff595B6E)),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
                               }
                           }
                         });
@@ -326,11 +352,11 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
       child: GestureDetector(
         onTap: () {
           Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileScreen(user['pk']),
-                    ),
-                  );
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfileScreen(user['pk']),
+            ),
+          );
         },
         child: Column(
           children: [

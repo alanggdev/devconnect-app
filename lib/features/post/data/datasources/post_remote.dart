@@ -3,6 +3,7 @@ import 'package:dev_connect_app/features/post/data/models/comment_model.dart';
 import 'package:dev_connect_app/features/post/data/models/post_model.dart';
 import 'package:dev_connect_app/features/post/domain/entities/comment.dart';
 import 'package:dev_connect_app/features/post/domain/entities/post.dart';
+import 'package:dev_connect_app/features/profile/data/datasources/profile_remote.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -19,6 +20,7 @@ abstract class PostDatasource {
   Future<String> createComment(Comment commentData);
   Future<List<PostModel>> createPost(Post postData);
   Future<List<dynamic>> searchUser(String username);
+  Future<List<PostModel>> getFollowingPosts(int userid);
 }
 
 class PostDatasourceImpl implements PostDatasource {
@@ -250,6 +252,69 @@ class PostDatasourceImpl implements PostDatasource {
       var resDecoded = convert.jsonDecode(response.body);
       List<dynamic> users = resDecoded;
       return users;
+    } else {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<List<PostModel>> getFollowingPosts(int userid) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? access = prefs.getString('access');
+
+    var url = Uri.https(apiURI, 'userprofile/user/simple/$userid');
+    var headers = {'Authorization': 'Bearer $access'};
+
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      var reponseData = convert.jsonDecode(response.body);
+
+      final queryParameters = {
+        "user_following": reponseData['pay_load']['user_following']
+      };
+
+      var urlFollowing = Uri.https(apiURI, '/post/following');
+      var headersFollwing = {
+        'Authorization': 'Bearer $access',
+        'Content-Type': 'application/json'
+      };
+
+      var responseFollowing = await http.post(urlFollowing,
+          body: convert.jsonEncode(queryParameters), headers: headersFollwing);
+
+      if (responseFollowing.statusCode == 200) {
+        List<PostModel> postList = [];
+        var reponseDataFollowing = convert.jsonDecode(responseFollowing.body);
+        var payLoad = reponseDataFollowing['pay_load'];
+
+        if (payLoad.length > 0) {
+          for (var object in payLoad) {
+            if (object['media'] == null) {
+              PostModel profilePostModelTemp = PostModel.fromJson(object);
+              postList.add(profilePostModelTemp);
+            } else {
+              PostModel profilePostModelTemp = PostModel.fromJsonMedia(object);
+              postList.add(profilePostModelTemp);
+            }
+          }
+
+          postList.sort((a, b) {
+            // Parse the date strings into DateTime objects
+            DateTime dateA = DateFormat('dd/MM/yyyy hh:mma').parse(a.date!);
+            DateTime dateB = DateFormat('dd/MM/yyyy hh:mma').parse(b.date!);
+
+            // Compare the dates
+            return dateB.compareTo(dateA);
+          });
+
+          return postList;
+        } else {
+          return postList;
+        }
+      } else {
+        throw Exception();
+      }
     } else {
       throw Exception();
     }

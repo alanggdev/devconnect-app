@@ -9,4 +9,5 @@ abstract class PostRepository {
   Future<String> createComment(Comment commentData);
   Future<List<Post>> createPost(Post postData);
   Future<List<dynamic>> searchUser(String username);
+  Future<List<Post>> getFollowingPosts(int userid);
 }

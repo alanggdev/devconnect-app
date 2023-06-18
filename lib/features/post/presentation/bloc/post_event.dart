@@ -2,6 +2,12 @@ part of 'post_bloc.dart';
 
 abstract class PostEvent {}
 
+class GetFollowingPosts extends PostEvent {
+  final int userid;
+
+  GetFollowingPosts({required this.userid});
+}
+
 class SearchUser extends PostEvent {
   final String username;
 

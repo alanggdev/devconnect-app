@@ -44,4 +44,9 @@ class PostRepositoryImpl implements PostRepository {
   Future<List<dynamic>> searchUser(String username) async {
     return await postDatasource.searchUser(username);
   }
+
+  @override
+  Future<List<PostModel>> getFollowingPosts(int userid) async {
+    return await postDatasource.getFollowingPosts(userid);
+  }
 }

@@ -73,8 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       screens = [
-        const PublicPostsScreen(),
         const FollowPostsScreen(),
+        const PublicPostsScreen(),
         ProfileScreen(useridvisit),
         const SettingsScreen(),
       ];
@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = const PublicPostsScreen();
+  Widget currentScreen = const FollowPostsScreen();
 
   @override
   Widget build(BuildContext context) {

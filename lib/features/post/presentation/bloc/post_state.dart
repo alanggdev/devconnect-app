@@ -2,6 +2,14 @@ part of 'post_bloc.dart';
 
 abstract class PostState {}
 
+class LoadingFollowingPosts extends PostState {}
+
+class LoadedFollowingPosts extends PostState {
+  List<Post> followingPosts;
+
+  LoadedFollowingPosts({required this.followingPosts});
+}
+
 class InitialState extends PostState {}
 
 class UpdatingPost extends PostState {}
