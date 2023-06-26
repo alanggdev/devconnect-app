@@ -1,6 +1,5 @@
 import 'package:dev_connect_app/features/post/presentation/bloc/post_bloc.dart';
 import 'package:dev_connect_app/features/post/presentation/pages/comment_screen.dart';
-import 'package:dev_connect_app/features/post/presentation/pages/home_screen.dart';
 import 'package:dev_connect_app/features/post/presentation/pages/post_screen.dart';
 
 import 'package:flutter/material.dart';
@@ -38,13 +37,7 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
         backgroundColor: const Color(0xffF4F4F4),
         title: GestureDetector(
           onTap: () {
-            // Navigator.pop(context);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomeScreen(),
-              ),
-            );
+            Navigator.pop(context);
           },
           child: Row(
             children: const [

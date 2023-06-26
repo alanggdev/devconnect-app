@@ -87,34 +87,34 @@ class WelcomeScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 25),
-                    child: TextButton.icon(
-                      icon: const FaIcon(
-                        FontAwesomeIcons.google,
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.red,
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        shadowColor: Colors.black,
-                        elevation: 6,
-                      ),
-                      onPressed: () {},
-                      label: const Text(
-                        'Ingresar con Google',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(bottom: 25),
+                  //   child: TextButton.icon(
+                  //     icon: const FaIcon(
+                  //       FontAwesomeIcons.google,
+                  //     ),
+                  //     style: OutlinedButton.styleFrom(
+                  //       foregroundColor: Colors.white,
+                  //       backgroundColor: Colors.red,
+                  //       minimumSize: const Size(double.infinity, 50),
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(10),
+                  //       ),
+                  //       shadowColor: Colors.black,
+                  //       elevation: 6,
+                  //     ),
+                  //     onPressed: () {},
+                  //     label: const Text(
+                  //       'Ingresar con Google',
+                  //       style: TextStyle(
+                  //         color: Colors.white,
+                  //         fontSize: 20,
+                  //         fontWeight: FontWeight.w600,
+                  //         fontFamily: 'Inter',
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   TextButton.icon(
                     icon: const Icon(Icons.email),
                     style: OutlinedButton.styleFrom(

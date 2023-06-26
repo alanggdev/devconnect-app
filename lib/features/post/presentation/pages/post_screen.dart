@@ -8,6 +8,7 @@ import 'package:dev_connect_app/features/profile/presentation/pages/profile_scre
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -88,8 +89,18 @@ class _PostScreenState extends State<PostScreen> {
             ),
           ],
         );
+      } else if (post.mediaURL.toString().contains('.opus')) {
+        final player = AudioCache();
+        String urlAudio = widget.profilePost.mediaURL.toString();
+        String urlHttps = urlAudio.replaceFirst('http://', 'https://');
+        return TextButton(
+          onPressed: () async {
+            final player = AudioPlayer();
+            await player.play(UrlSource(urlHttps));
+          },
+          child: const Icon(Icons.play_arrow),
+        );
       } else {
-        // return Text(post.mediaURL.toString());
         return Image.network(post.mediaURL.toString());
       }
     }
@@ -198,7 +209,7 @@ class _PostScreenState extends State<PostScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
@@ -455,7 +466,8 @@ class _PostScreenState extends State<PostScreen> {
                                     description: commentText,
                                     date: formattedDate));
                                 Navigator.pop(context);
-                                context.read<PostBloc>().add(GetDetailPost(postid: widget.profilePost.id!));
+                                context.read<PostBloc>().add(GetDetailPost(
+                                    postid: widget.profilePost.id!));
                               }
                             },
                             style: OutlinedButton.styleFrom(

@@ -5,6 +5,7 @@ import 'package:dev_connect_app/features/post/presentation/pages/follow_posts_sc
 import 'package:dev_connect_app/features/post/presentation/pages/public_posts.dart';
 import 'package:dev_connect_app/features/post/presentation/pages/settings_screen.dart';
 import 'package:dev_connect_app/features/profile/presentation/pages/profile_screen.dart';
+import 'package:file_picker/file_picker.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,6 +59,14 @@ class _HomeScreenState extends State<HomeScreen> {
         );
         ScaffoldMessenger.of(currentContext).showSnackBar(snackBar);
       });
+    }
+  }
+
+  Future<void> getAudio() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom, allowedExtensions: ['mp3']);
+    if (result != null) {
+      file = File(result.files.single.path!);
     }
   }
 
@@ -395,31 +404,53 @@ class _HomeScreenState extends State<HomeScreen> {
                             label: Container(),
                           ),
                         ),
-                        
                       ],
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 15),
                       child: SizedBox(
-                            width: 48,
-                            child: TextButton.icon(
-                              icon: const Icon(Icons.videocam),
-                              onPressed: () {
-                                getVideo();
-                              },
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: const Color(0xff5D95D1),
-                                minimumSize: const Size(150, 8),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                shadowColor: Colors.black,
-                                elevation: 6,
-                              ),
-                              label: Container(),
+                        width: 48,
+                        child: TextButton.icon(
+                          icon: const Icon(Icons.videocam),
+                          onPressed: () {
+                            getVideo();
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: const Color(0xff5D95D1),
+                            minimumSize: const Size(150, 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
                             ),
+                            shadowColor: Colors.black,
+                            elevation: 6,
                           ),
+                          label: Container(),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: SizedBox(
+                        width: 48,
+                        child: TextButton.icon(
+                          icon: const Icon(Icons.audio_file),
+                          onPressed: () {
+                            getAudio();
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: const Color(0xff5D95D1),
+                            minimumSize: const Size(150, 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            shadowColor: Colors.black,
+                            elevation: 6,
+                          ),
+                          label: Container(),
+                        ),
+                      ),
                     ),
                   ],
                 ),
